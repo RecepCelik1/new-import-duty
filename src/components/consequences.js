@@ -16,7 +16,6 @@ const Consequences = () => {
         commodtyData = subItem
     }
     
-    console.log(commodtyData)
 
     const seperateMesuras = (item) => {
         let guideMeasuraArray = item?.data?.relationships?.import_measures.data;
@@ -111,7 +110,7 @@ const searchGeographicalAreasForVAT = (countryId, vatObjects) => {
 const matchedObjectForVAT = searchGeographicalAreasForVAT(selectedCountry, vatObjects);
 
 const matchingVatMesureObjects = searchMatchingObjects(matchedObjectForVAT, commodtyData?.included);
-console.log("Matching VAT objects:", matchingVatMesureObjects);
+
 
 // Function to search for geographical areas and check excluded countries
 const searchGeographicalAreas = (countryId, otherObjects) => {
@@ -158,8 +157,6 @@ if (matchedObject) {
     matchedImportDutyObjects = searchMatchingObjects(tariffObjects[0] , commodtyData?.included)
 }
 
-console.log("matched duty objects" , matchedImportDutyObjects)
-
     let dutyExpression = ""
     let dutyRate 
     let measureComponents = matchedImportDutyObjects?.measure_components
@@ -181,8 +178,7 @@ console.log("matched duty objects" , matchedImportDutyObjects)
     if(isNaN(dutyRate)){
         dutyRate = 0
     }
-    console.log(dutyExpression)
-    console.log(dutyRate)
+
 
     let VATrate
     if(matchingVatMesureObjects?.measure_components !== undefined) {
