@@ -2,11 +2,15 @@ import { useDispatch , useSelector } from "react-redux"
 import { handleInputChanges } from "../redux/itemInfoSlice";
 import CountryFlag from 'react-country-flag';  
 import Select from "react-select";
+import { FaInfoCircle } from "react-icons/fa";
+import { useState } from "react";
 
 const ItemInfos = () => {
 
     const dispatch = useDispatch()
     const datas = useSelector(state => state.itemInfos)
+    const [isHovered, setIsHovered] = useState(false);
+    const [isBoxHovered, setisBoxHovered] = useState(false);
 
     const parsingFunction = (event , field) => {
 
@@ -21,6 +25,31 @@ const ItemInfos = () => {
 
     }
 
+    const handleMouseEnter = (field) => {
+
+        if(field === "cif") {
+            setIsHovered(true);
+        }
+
+        if(field === "box") {
+            setisBoxHovered(true)
+        }
+        
+      };
+    
+      const handleMouseLeave = (field) => {
+        if(field === "cif") {
+            setIsHovered(false);
+        } 
+        if(field === "box") {
+            setisBoxHovered(false)
+        }
+
+      };
+
+      const cifMessage = "Default is 'Cost, Insurance and Freight' (CIF). This will include shipping and insurance costs when calculating the value on which duty and taxes will be calculated. If you do not wish to include these, you can select 'Free On Board' (FOB) or set shipping and insurance cost fields to zero."
+
+      const boxMessage = "Commodity codes are internationally recognised reference numbers and describes a specific product when importing or exporting goods. Enter the exact commodity code of or describe the product as good as possible."
     const customStyles = { //=> for dropdown menu customize
         option: (provided, state) => ({
           ...provided, 
@@ -111,16 +140,41 @@ const ItemInfos = () => {
                     />
                 </div>
 
-                <div className="flex flex-col w-full p-1">
+                <div className="w-full relative inline-block">
+                    <span className="absolute right-1"
+                          onMouseEnter={() => handleMouseEnter("cif")}
+                          onMouseLeave={() => handleMouseLeave("cif")}
+                    >
+                        <FaInfoCircle/>
+                        {isHovered && (
+                    <div className="absolute top-0 left-full bg-gray-100 p-2 rounded shadow-md z-10 text-xs font-gabarito">
+                            {cifMessage}
+                    </div>
+                    )}
+                    </span>
 
-                    <div className="mb-1 font-gabarito">CIF or FOB</div>
-                    <Select
-                        options={datas.CimCif}
-                        styles={customStyles}
-                        isSearchable
-                        onChange={(selectedOption) => dispatch(handleInputChanges({value : selectedOption , field : "selectedCimCif"}))}
-                        value={datas.selectedCimCif}
-                    />
+                    <div className="flex flex-col w-full p-1">
+                        <div className="mb-1 font-gabarito">CIF or FOB</div>
+                        <Select
+                            options={datas.CimCif}
+                            styles={customStyles}
+                            isSearchable
+                            onChange={(selectedOption) => dispatch(handleInputChanges({value : selectedOption , field : "selectedCimCif"}))}
+                            value={datas.selectedCimCif}
+                        />
+                    </div>
+
+                    <span className="absolute right-1 mt-2"
+                          onMouseEnter={() => handleMouseEnter("box")}
+                          onMouseLeave={() => handleMouseLeave("box")}
+                    >
+                        <FaInfoCircle/>
+                        {isBoxHovered && (
+                    <div className="absolute top-0 left-full bg-gray-100 p-2 rounded shadow-md z-10 text-xs font-gabarito">
+                            {boxMessage}
+                    </div>
+                    )}
+                    </span>
                 </div>
             </div>
 

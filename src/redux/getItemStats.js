@@ -42,7 +42,11 @@ export const fetchSubItemStats = createAsyncThunk(
 export const fetchItemsProperties = createSlice({
   name: 'fetchItemsProperties',
   initialState,
-  reducers: {},
+  reducers: {
+    clearSelectedSubItem : (state , action) => {
+      state.subItem = action.payload
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchItemStats.fulfilled, (state, action) => {
         state.item = action.payload;
@@ -57,7 +61,7 @@ export const fetchItemsProperties = createSlice({
                   matchingObjects.push({
                       value: goods_nomenclature_item_id,
                       label: description,
-                      i: index // Eklenen indeks numarası
+                      i: index
                   });
               }
           });
@@ -73,6 +77,6 @@ export const fetchItemsProperties = createSlice({
 })
 
 // eslint-disable-next-line
-export const {} = fetchItemsProperties.actions
+export const {clearSelectedSubItem} = fetchItemsProperties.actions
 
 export default fetchItemsProperties.reducer

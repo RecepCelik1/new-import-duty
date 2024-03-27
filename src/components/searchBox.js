@@ -1,10 +1,9 @@
-// SearchBox.js
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData, handleEmptySearchBox } from '../redux/searchItems';
 import Select from 'react-select';
-import {fetchItemStats, fetchSubItemStats} from '../redux/getItemStats.js';
+import {clearSelectedSubItem, fetchItemStats, fetchSubItemStats} from '../redux/getItemStats.js';
 
 
 const SearchBox = () => {
@@ -14,10 +13,11 @@ const SearchBox = () => {
     const [selectedItem , setSelectedItem] = useState([]) 
     const getOptionValue = (option) => option.i;
     const inputRef = useRef(null); // Ref for input element
-
+    const [subValue , setSubValue] = useState()
     const selectedItemStats = useSelector(state => state.itemStats.item)
     const subItems = useSelector(state => state.itemStats.subItems)
-    
+  
+
     const dispatch = useDispatch()
 
     const handleSearchChange = (e) => {
@@ -27,13 +27,19 @@ const SearchBox = () => {
 
         if (newSearchTerm !== '') {
             // eslint-disable-next-line
-            dispatch(fetchData(`https://www.trade-tariff.service.gov.uk/api/v2/search_references.json?query[letter]=${newSearchTerm}`))
+            dispatch(fetchData(newSearchTerm))
 
         } else {
             dispatch(handleEmptySearchBox([]))
         }
 
     };
+
+    useEffect(() => {
+      dispatch(clearSelectedSubItem([]));
+      setSubValue("")
+      // eslint-disable-next-line
+  }, [subItems , selectedItem])
 
     const handleInputFocus = () => {
         setMenuOpen(true); 
@@ -56,6 +62,7 @@ const SearchBox = () => {
 
     const handleSubCategoryClick = (selectedOption) => {
         const commodityID = parseFloat(selectedOption.value)
+        setSubValue({label : selectedOption.label, value : selectedOption.value})
         dispatch(fetchSubItemStats(`https://www.trade-tariff.service.gov.uk/api/v2/commodities/${commodityID}`))
     }
 
@@ -181,6 +188,7 @@ const SearchBox = () => {
                         options={subItems}
                         getOptionValue={getOptionValue}
                         styles={subitemDropdonwsStyle}
+                        value={subValue}
                     />
             </div>
         </div>

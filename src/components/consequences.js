@@ -219,7 +219,7 @@ if (matchedObject) {
     let commodityID = commodtyData?.data?.attributes?.goods_nomenclature_item_id
     
     return (
-        <div className="w-full flex flex-col">
+        <div className="w-full flex flex-col p-1">
             <div className="w-full p-3 flex flex-col bg-gray-200 rounded-md">
             <div className="flex justify-between">
                 <div className="flex flex-col font-bold text-lg">
