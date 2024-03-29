@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchData, handleEmptySearchBox } from '../redux/searchItems';
+import { fetchData, handleEmptySearchBox, setCommodityID } from '../redux/searchItems';
 import Select from 'react-select';
 import {clearSelectedSubItem, fetchItemStats, fetchSubItemStats} from '../redux/getItemStats.js';
 
@@ -53,16 +53,18 @@ const SearchBox = () => {
         setSelectedItem(selectedOption)
         setMenuOpen(false)
         if (inputRef.current) {
-            inputRef.current.blur(); // Input kutusunu blur yap
+            inputRef.current.blur();
         }
         setSearchTerm(selectedOption.label)
-        const commodityID = parseFloat(selectedOption.value)
+        const commodityID = selectedOption.value;
+        dispatch(setCommodityID(commodityID))
         dispatch(fetchItemStats(`https://www.trade-tariff.service.gov.uk/api/v2/commodities/${commodityID}`))
     }
 
     const handleSubCategoryClick = (selectedOption) => {
-        const commodityID = parseFloat(selectedOption.value)
+        const commodityID = selectedOption.value
         setSubValue({label : selectedOption.label, value : selectedOption.value})
+        dispatch(setCommodityID(commodityID))
         dispatch(fetchSubItemStats(`https://www.trade-tariff.service.gov.uk/api/v2/commodities/${commodityID}`))
     }
 
@@ -75,15 +77,7 @@ const SearchBox = () => {
         }),
         control: (provided) => ({
           ...provided,
-          width: '100%',
-          minHeight: "48px",
-          height : '45px',
-          borderRadius: '5px',
           display: 'none',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize : "16px",
-          maxHeight: '20px',
         }),
         menu: (provided, state) => ({
             ...provided,
@@ -91,9 +85,7 @@ const SearchBox = () => {
             overflowY: 'auto',
             
           }),
-          indicatorSeparator: () => ({
-            display: 'none',
-          }),
+
           menuList: (provided, state) => ({
             ...provided,
             padding: 0,
@@ -102,12 +94,7 @@ const SearchBox = () => {
             borderRadius: '8px',
             
         }),
-          dropdownIndicator: (provided, state) => ({
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginRight : "6px",
-          }),
+
       };
 
       const subitemDropdonwsStyle = { //=> for dropdown menu customize
@@ -119,15 +106,7 @@ const SearchBox = () => {
         }),
         control: (provided) => ({
           ...provided,
-          width: '100%',
-          minHeight: "48px",
-          height : '45px',
-          borderRadius: '5px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize : "16px",
-          maxHeight: '20px',
+
         }),
         menu: (provided, state) => ({
             ...provided,
@@ -135,29 +114,20 @@ const SearchBox = () => {
             overflowY: 'auto',
             
           }),
-          indicatorSeparator: () => ({
-            display: 'none',
-          }),
           menuList: (provided, state) => ({
             ...provided,
             padding: 0,
             fontSize: '12px', 
             backgroundColor: state.isFocused ? '#e6f7ff' : 'white', // 
             borderRadius: '8px',
-            
         }),
-          dropdownIndicator: (provided, state) => ({
-            display: 'none',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginRight : "6px",
-          }),
-      }
+
+      };
 
     return (
         <div className="relative w-full pr-1 pl-1">
-            <div>
-
+            <div className='pl-1 font-gabarito'>
+            Commodity code or product description
             </div>
             <input
                 type="text"

@@ -50,7 +50,7 @@ const ItemInfos = () => {
       const cifMessage = "Default is 'Cost, Insurance and Freight' (CIF). This will include shipping and insurance costs when calculating the value on which duty and taxes will be calculated. If you do not wish to include these, you can select 'Free On Board' (FOB) or set shipping and insurance cost fields to zero."
 
       const boxMessage = "Commodity codes are internationally recognised reference numbers and describes a specific product when importing or exporting goods. Enter the exact commodity code of or describe the product as good as possible."
-    const customStyles = { //=> for dropdown menu customize
+      const customStyles = { //=> for dropdown menu customize
         option: (provided, state) => ({
           ...provided, 
           color: state.isSelected ? 'white' : 'black',
@@ -59,15 +59,7 @@ const ItemInfos = () => {
         }),
         control: (provided) => ({
           ...provided,
-          width: '100%',
-          minHeight: "48px",
-          height : '48px',
-          borderRadius: '5px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize : "16px",
-          maxHeight: '20px',
+
         }),
         menu: (provided, state) => ({
             ...provided,
@@ -75,23 +67,14 @@ const ItemInfos = () => {
             overflowY: 'auto',
             
           }),
-          indicatorSeparator: () => ({
-            display: 'none',
-          }),
           menuList: (provided, state) => ({
             ...provided,
             padding: 0,
             fontSize: '12px', 
             backgroundColor: state.isFocused ? '#e6f7ff' : 'white', // 
             borderRadius: '8px',
-            
         }),
-          dropdownIndicator: (provided, state) => ({
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginRight : "6px",
-          }),
+
       };
 
     return (

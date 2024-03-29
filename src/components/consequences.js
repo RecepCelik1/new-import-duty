@@ -6,6 +6,7 @@ const Consequences = () => {
     const subItem = useSelector(state => state.itemStats.subItem)
     const selectedCountry = useSelector(state => state.countries.selectedCountry.value)
     const itemInfos = useSelector(state => state.itemInfos)
+    const itemID = useSelector(state => state.searchItems.commodityID)
 
     let commodtyData
     
@@ -16,7 +17,7 @@ const Consequences = () => {
         commodtyData = subItem
     }
     
-
+    //function for seperate measure objects in included section
     const seperateMesuras = (item) => {
         let guideMeasuraArray = item?.data?.relationships?.import_measures.data;
         let included = item?.included;
@@ -52,7 +53,6 @@ const Consequences = () => {
     
         return { tariffObjects, vatObjects, otherObjects };
     }
-    
     const { tariffObjects, vatObjects, otherObjects } = seperateMesuras(commodtyData);
 
     const searchMatchingObjects = (pilotObject, includedObjects) => {
@@ -175,6 +175,7 @@ if (matchedObject) {
 
         } 
     }
+
     if(isNaN(dutyRate)){
         dutyRate = 0
     }
@@ -191,9 +192,25 @@ if (matchedObject) {
         VATrate = 0
     }
 
+    let itemPrice = itemInfos.itemSellingPrice
+    let shippingCharge = itemInfos.shippingCharge
+    let absolutePrice
+    if (itemInfos.selectedCimCif.value === "cif") {
+        absolutePrice = itemPrice + shippingCharge
+    } else {
+        absolutePrice = itemPrice
+    }   
+
     if(itemInfos.selectedTypeOfGood.value === "gifts"){
-        VATrate = 0
+
+        if(absolutePrice >= 40){
+          VATrate = VATrate + 0
+        } else {
+          VATrate = 0
+        }
+
         dutyRate = 0
+
     } else if (itemInfos.selectedTypeOfGood.value === "exiseGoods") {
         dutyRate = dutyRate + 0
         VATrate = VATrate + 0
@@ -202,21 +219,12 @@ if (matchedObject) {
         VATrate = VATrate + 0
     }
 
-    let VatAmount
-    let dutyAmount 
-    let itemPrice = itemInfos.itemSellingPrice
-    let shippingCharge = itemInfos.shippingCharge
+    let VatAmount = absolutePrice * VATrate / 100
+    let dutyAmount = absolutePrice * dutyRate / 100
 
-    if (itemInfos.selectedCimCif.value === "cif") {
-        VatAmount = (itemPrice + shippingCharge)*VATrate/100
-        dutyAmount = (itemPrice + shippingCharge)*dutyRate/100
-    } else {
-        dutyAmount = itemPrice*dutyRate/100
-        VatAmount = itemPrice*VATrate/100
-    }
 
     let totalPayment = itemPrice + shippingCharge + VatAmount + dutyAmount
-    let commodityID = commodtyData?.data?.attributes?.goods_nomenclature_item_id
+
     
     return (
         <div className="w-full flex flex-col p-1">
@@ -224,7 +232,7 @@ if (matchedObject) {
             <div className="flex justify-between">
                 <div className="flex flex-col font-bold text-lg">
                     <div>Total for</div>
-                    <div>{commodityID}</div>
+                    <div>{itemID}</div>
                 </div>
                 <div className="flex justify-center font-bold text-xl">{totalPayment} GBP</div>
             </div>

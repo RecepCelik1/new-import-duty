@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     items : [],
+    commodityID : null
 }
 
 export const fetchData = createAsyncThunk(
@@ -47,13 +48,16 @@ export const fetchItems = createSlice({
   reducers: {
       handleEmptySearchBox : (state , action) => {
         state.items = action.payload
+      },
+      setCommodityID : (state , action) => {
+        state.commodityID = action.payload
       }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
        const exactItemDatas = action.payload.data.map((item, i) => ({
         value: item.attributes.goods_nomenclature_item_id,
-        label: item.attributes.title.toUpperCase(),
+        label: item.attributes.title.toUpperCase() + `, ID : ${item.attributes.goods_nomenclature_item_id}`,
         i: i,
     }));
         state.items = exactItemDatas
@@ -61,6 +65,6 @@ export const fetchItems = createSlice({
   },
 })
 
-export const { handleEmptySearchBox } = fetchItems.actions
+export const { handleEmptySearchBox , setCommodityID } = fetchItems.actions
 
 export default fetchItems.reducer
