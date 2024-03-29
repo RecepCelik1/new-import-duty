@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchData, handleEmptySearchBox, setCommodityID } from '../redux/searchItems';
+import { fetchData, handleEmptySearchBox, setCommodityID } from '../redux/searchItems.js';
 import Select from 'react-select';
 import {clearSelectedSubItem, fetchItemStats, fetchSubItemStats} from '../redux/getItemStats.js';
 
@@ -92,7 +92,6 @@ const SearchBox = () => {
             fontSize: '12px', 
             backgroundColor: state.isFocused ? '#e6f7ff' : 'white', // 
             borderRadius: '8px',
-            
         }),
 
       };
@@ -124,6 +123,12 @@ const SearchBox = () => {
 
       };
 
+      const getOptionLabel = ({label, value}) => (
+        <div>
+          <div>{label}</div>
+          <div>Commodity #{value}</div>
+        </div>
+      );
     return (
         <div className="relative w-full pr-1 pl-1">
             <div className='pl-1 font-gabarito'>
@@ -148,6 +153,7 @@ const SearchBox = () => {
                 menuIsOpen={isMenuOpen}
                 onChange={(selectedOption) => handleSelectOnclick(selectedOption)}
                 value={selectedItem}
+                getOptionLabel={getOptionLabel}
             />
 
         <div className={`transition-all duration-[500ms] ease-in-out ${selectedItemStats.data?.relationships?.commodities !== undefined ? 'opacity-100 max-h-[1000px]' : 'opacity-0 max-h-0 overflow-hidden'}`}>    
@@ -159,6 +165,7 @@ const SearchBox = () => {
                         getOptionValue={getOptionValue}
                         styles={subitemDropdonwsStyle}
                         value={subValue}
+                        getOptionLabel={getOptionLabel}
                     />
             </div>
         </div>

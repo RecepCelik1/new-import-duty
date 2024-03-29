@@ -57,7 +57,7 @@ export const fetchItems = createSlice({
     builder.addCase(fetchData.fulfilled, (state, action) => {
        const exactItemDatas = action.payload.data.map((item, i) => ({
         value: item.attributes.goods_nomenclature_item_id,
-        label: item.attributes.title.toUpperCase() + `, ID : ${item.attributes.goods_nomenclature_item_id}`,
+        label: item.attributes.title.toUpperCase(),
         i: i,
     }));
         state.items = exactItemDatas

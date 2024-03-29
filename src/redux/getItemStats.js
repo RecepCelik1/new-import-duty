@@ -60,7 +60,7 @@ export const fetchItemsProperties = createSlice({
                   const { goods_nomenclature_item_id, description } = matchingObjectInLargeArray.attributes;
                   matchingObjects.push({
                       value: goods_nomenclature_item_id,
-                      label: description + `, ID : ${goods_nomenclature_item_id}`,
+                      label: description,
                       i: index
                   });
               }
