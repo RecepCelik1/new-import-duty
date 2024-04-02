@@ -22,14 +22,14 @@ export const fetchData = createAsyncThunk(
             }
           
           const result = await res.json()
-          let formateDate = {data : [{
+          let formateData = {data : [{
             attributes : {
               goods_nomenclature_item_id : result.data.attributes.goods_nomenclature_item_id,
               title : result.data.attributes.description_plain
             }
           }]}
 
-          return formateDate
+          return formateData
 
         } else {
           return data;

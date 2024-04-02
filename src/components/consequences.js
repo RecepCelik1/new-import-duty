@@ -8,6 +8,7 @@ const Consequences = () => {
     const itemInfos = useSelector(state => state.itemInfos)
     const itemID = useSelector(state => state.searchItems.commodityID)
 
+
     let commodtyData
     
     if(primalItem?.data?.type === "commodity") {
@@ -16,7 +17,6 @@ const Consequences = () => {
     } else if(primalItem?.data?.type === "heading") {
         commodtyData = subItem
     }
-    
     //function for seperate measure objects in included section
     const seperateMesuras = (item) => {
         let guideMeasuraArray = item?.data?.relationships?.import_measures.data;

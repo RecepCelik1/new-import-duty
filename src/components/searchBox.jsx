@@ -14,10 +14,10 @@ const SearchBox = () => {
     const getOptionValue = (option) => option.i;
     const inputRef = useRef(null); // Ref for input element
     const [subValue , setSubValue] = useState()
-    const selectedItemStats = useSelector(state => state.itemStats.item)
+    //const selectedItemStats = useSelector(state => state.itemStats.item)
     const subItems = useSelector(state => state.itemStats.subItems)
-  
-
+    const isThereAnySubItem = useSelector(state => state.itemStats.isThereAnySubItem)
+ 
     const dispatch = useDispatch()
 
     const handleSearchChange = (e) => {
@@ -67,6 +67,8 @@ const SearchBox = () => {
         dispatch(setCommodityID(commodityID))
         dispatch(fetchSubItemStats(`https://www.trade-tariff.service.gov.uk/api/v2/commodities/${commodityID}`))
     }
+
+
 
     const customStyles = { //=> for dropdown menu customize
         option: (provided, state) => ({
@@ -156,7 +158,7 @@ const SearchBox = () => {
                 getOptionLabel={getOptionLabel}
             />
 
-        <div className={`transition-all duration-[500ms] ease-in-out ${selectedItemStats.data?.relationships?.commodities !== undefined ? 'opacity-100 max-h-[1000px]' : 'opacity-0 max-h-0 overflow-hidden'}`}>    
+        <div className={`transition-all duration-[500ms] ease-in-out ${isThereAnySubItem === true ? 'opacity-100 max-h-[1000px]' : 'opacity-0 max-h-0 overflow-hidden'}`}>    
             <div className="w-full mt-4 flex flex-col">
                 <div className="font-gabarito mb-1">Please select subcategory</div>
                     <Select

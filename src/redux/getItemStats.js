@@ -2,8 +2,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     item : [],
-    subItems : [],
 
+    isThereAnySubItem :false,
+    subItems : [],
     subItem : []
 }
 
@@ -51,9 +52,9 @@ export const fetchItemsProperties = createSlice({
     builder.addCase(fetchItemStats.fulfilled, (state, action) => {
         state.item = action.payload;
 
-        if (state.item.data.relationships.commodities !== undefined) {
+        if (state.item.data.type === "heading") {
           const matchingObjects = [];
-      
+          
           state.item.data.relationships.commodities.data.forEach((firstObj, index) => {
               const matchingObjectInLargeArray = state.item.included.find(largeObj => largeObj.id === firstObj.id);
               if (matchingObjectInLargeArray) {
@@ -65,11 +66,20 @@ export const fetchItemsProperties = createSlice({
                   });
               }
           });
-      
+          
           state.subItems = matchingObjects;
+          state.isThereAnySubItem = true
+      } else {
+        state.subItems = [];
+        state.isThereAnySubItem = false
       }
 
       })
+      .addCase(fetchItemStats.rejected, (state, action) => {
+        state.item = [];
+        state.subItems = []
+        state.isThereAnySubItem = false
+    })
     builder.addCase(fetchSubItemStats.fulfilled, (state, action) => {
         state.subItem = action.payload;
       })
