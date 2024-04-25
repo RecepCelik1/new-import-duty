@@ -83,6 +83,9 @@ export const fetchItemsProperties = createSlice({
     builder.addCase(fetchSubItemStats.fulfilled, (state, action) => {
         state.subItem = action.payload;
       })
+      .addCase(fetchSubItemStats.rejected , (state, action) => {
+        state.subItem = []
+      })
   },
 })
 

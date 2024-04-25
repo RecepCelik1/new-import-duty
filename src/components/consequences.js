@@ -17,6 +17,7 @@ const Consequences = () => {
     } else if(primalItem?.data?.type === "heading") {
         commodtyData = subItem
     }
+
     //function for seperate measure objects in included section
     const seperateMesuras = (item) => {
         let guideMeasuraArray = item?.data?.relationships?.import_measures.data;
@@ -31,18 +32,19 @@ const Consequences = () => {
             if (matchedObj) {
                 const geographicalAreaId = matchedObj.relationships?.geographical_area?.data?.id;
                 const measureTypeId = matchedObj.relationships?.measure_type?.data?.id;
-                
-                if (measureTypeId === "103" && geographicalAreaId === "1011") {
+                const effectiveEndDate = matchedObj.attributes?.effective_end_date;
+
+                if (measureTypeId === "103" && geographicalAreaId === "1011" && effectiveEndDate === null) {
                     tariffObjects.push({
                         measure: matchedObj,
                         geographical_area: included.find(areaObj => areaObj.id === geographicalAreaId)
                     });
-                } else if (matchedObj.id < 0) {
+                } else if (matchedObj.id < 0 && effectiveEndDate === null) {
                     vatObjects.push({
                         measure: matchedObj,
                         geographical_area: included.find(areaObj => areaObj.id === geographicalAreaId)
                     });
-                } else {
+                } else if (effectiveEndDate === null) {
                     otherObjects.push({
                         measure: matchedObj,
                         geographical_area: included.find(areaObj => areaObj.id === geographicalAreaId)
@@ -54,7 +56,7 @@ const Consequences = () => {
         return { tariffObjects, vatObjects, otherObjects };
     }
     const { tariffObjects, vatObjects, otherObjects } = seperateMesuras(commodtyData);
-
+    
     const searchMatchingObjects = (pilotObject, includedObjects) => {
 
         const dutyExpressionId = pilotObject?.measure?.relationships.duty_expression.data.id;
@@ -152,9 +154,11 @@ const matchedObject = searchGeographicalAreas(selectedCountry, otherObjects);
 if (matchedObject) {
 
     matchedImportDutyObjects = searchMatchingObjects(matchedObject , commodtyData?.included)
+
 } else {
 
     matchedImportDutyObjects = searchMatchingObjects(tariffObjects[0] , commodtyData?.included)
+
 }
 
     let dutyExpression = ""
